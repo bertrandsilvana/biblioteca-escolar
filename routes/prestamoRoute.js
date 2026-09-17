@@ -2,36 +2,29 @@ const express = require('express');
 
 const router = express.Router();
 
-const prestamoController =
-    require('../controllers/prestamoController');
+const prestamoController = require('../controllers/prestamoController');
+
+const authMiddleware = require('../middleware/authMiddleware');
+const roleMiddleware = require("../middleware/roleMiddleware");
+
+
+router.use(authMiddleware);
 
 
 // GET /prestamos
-router.get(
-    '/',
-    prestamoController.listar
-);
+router.get('/', roleMiddleware(["bibliotecario"]), prestamoController.listar);
 
 
 // GET /prestamos/:id
-router.get(
-    '/:id',
-    prestamoController.listarPorAlumno
-);
+router.get('/:id', roleMiddleware(["bibliotecario"]),prestamoController.listarPorAlumno);
 
 
 // POST /prestamos
-router.post(
-    '/',
-    prestamoController.crear
-);
+router.post('/',  roleMiddleware(["bibliotecario"]),  prestamoController.crear);
 
 
 // PUT /prestamos/:id
-router.put(
-    '/:id',
-    prestamoController.devolver
-);
+router.put('/:id', roleMiddleware(["bibliotecario"]),prestamoController.devolver);
 
 
 module.exports = router;
